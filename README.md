@@ -80,7 +80,9 @@ InstantiationStrategy 实例化策略：支持 Cglib 动态增强与 JDK 标准�
 ### 5.1 getbean流程
 
 1。singletonObjects	一级缓存，key为Bean名称，value为Bean实例。这里的Bean实例指的是已经完全创建好的，即已经经历实例化->属性填充->初始化以及各种后置处理过程的Bean，可直接使用。
+
 2.earlySingletonObjects	二级缓存，key为Bean名称，value为Bean实例。这里的Bean实例指的是仅完成实例化的Bean，还未进行属性填充等后续操作。用于提前曝光，供别的Bean引用，解决循环依赖。这里存储的就是提前暴露的bean，如果需要提前引用，也就是aop。那么这里存的就是提前aop的对象，否则就是普通对象bean
+
 3.singletonFactories	三级缓存，key为Bean名称，value为Bean工厂。在Bean实例化后，属性填充之前，如果允许提前曝光，Spring会把该Bean转换成Bean工厂并加入到三级缓存。在需要引用提前曝光对象时再通过工厂对象的getObject()方法获取。这里通过后置处理器方法可以让它提前aop
 
 
