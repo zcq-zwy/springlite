@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+
+  <bean class="com.zcqzwy.springframework.bean.AccountDao" destroy-method="destroyDataMethod"
+    id="accountDao" init-method="initDataMethod">
+    <property name="dbName" value="test"/>
+    <property name="password" value="123456"/>
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.bean.AccountService" id="accountService"
+    scope="prototype">
+    <property name="aId" value="10001"/>
+    <property name="company" value="腾讯"/>
+    <property name="accountDao" ref="proxyAccountDaoFactory"/>
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.bean.ProxyBeanFactory" id="proxyAccountDaoFactory"/>
+
+
+  <bean class="com.zcqzwy.springframework.common.MyBeanFactoryPostProcessor"/>
+  <bean class="com.zcqzwy.springframework.common.MyBeanPostProcessor"/>
+  <bean class="com.zcqzwy.springframework.common.MyBeanFactoryOrderedPostProcessor"/>
+  <bean class="com.zcqzwy.springframework.common.MyBeanFactoryOrderedPostProcessor1"/>
+  <bean class="com.zcqzwy.springframework.common.MyBeanFactoryPriorityOrderedPostProcessor"/>
+  <bean class="com.zcqzwy.springframework.common.MyBeanFactoryPriorityOrderedPostProcessor1"/>
+
+
+  <!--  配置监听器和事件-->
+  <bean class="com.zcqzwy.springframework.listener.CustomEventListener" id="customEventListener"/>
+  <bean class="com.zcqzwy.springframework.listener.ContextRefreshedEventListener"
+    id="contextRefreshedEventListener"/>
+  <bean class="com.zcqzwy.springframework.listener.ContextClosedEventListener"
+    id="contextClosedEventListener"/>
+
+
+  <bean class="com.zcqzwy.springframework.bean.UserService" id="userService">
+
+    <property name="token" value="123456"/>
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.bean.UserServiceBeforeAdvice" id="beforeAdvice"/>
+
+  <bean class="com.zcqzwy.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor"
+    id="methodInterceptor">
+    <property name="advice" ref="beforeAdvice"/>
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor"
+    id="pointcutAdvisor">
+    <property name="expression"
+      value="execution(* com.zcqzwy.springframework.bean.interfece.IUserService.*(..))"/>
+    <property name="advice" ref="methodInterceptor"/>
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+  <bean class="com.zcqzwy.springframework.beans.factory.PropertyPlaceholderConfigurer">
+    <property name="location" value="classpath:important.properties"/>
+  </bean>
+
+
+  <bean class="com.zcqzwy.springframework.bean.compent.Car" id="car1" lazyInit="false" init-method="init">
+    <property name="brand" value="${brand}"/>
+    <property name="price" value="1000000"/>
+    <property name="produceDate" value="2021-01-01"/>
+  </bean>
+
+  <bean
+    class="com.zcqzwy.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+  <bean class="com.zcqzwy.springframework.context.support.ConversionServiceFactoryBean"
+    id="conversionService">
+    <property name="converters" ref="convertersFactoryBean"/>
+
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.bean.compent.ConvertersFactoryBean"
+    id="convertersFactoryBean">
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor"
+    id="pointcutAdvisor1">
+    <property name="expression"
+      value="execution(* com.zcqzwy.springframework.bean.ABean.func(..))"/>
+    <property name="advice" ref="methodInterceptor"/>
+  </bean>
+
+  <bean class="com.zcqzwy.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor"
+    id="methodInterceptor1">
+    <property name="advice" ref="beforeAdvice1"/>
+  </bean>
+  <bean class="com.zcqzwy.springframework.bean.ABeforeAdvice" id="beforeAdvice1"/>
+
+  <bean class="com.zcqzwy.springframework.bean.BBean" id="b">
+    <property name="a" ref="a"/>
+  </bean>
+
+
+  <bean class="com.zcqzwy.springframework.bean.ABean" id="a">
+    <property name="b" ref="b"/>
+  </bean>
+
+  <!-- a被代理 -->
+  <context:component-scan base-package="com.zcqzwy.springframework.bean.compent"/>
+</beans>

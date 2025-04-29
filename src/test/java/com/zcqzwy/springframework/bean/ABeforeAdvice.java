@@ -1,0 +1,20 @@
+package com.zcqzwy.springframework.bean;
+
+import com.zcqzwy.springframework.aop.framework.MethodBeforeAdvice;
+import java.lang.reflect.Method;
+
+/**
+ * <p>作者： zcq</p>
+ * <p>文件名称: ABeforeAdvice </p>
+ * <p>描述: [类型描述] </p>
+ * <p>创建时间: 2025/4/28 </p>
+ *
+ * @author <a href="mail to: 2928235428@qq.com" rel="nofollow">作者</a>
+ * @version 1.0
+ **/
+public class ABeforeAdvice implements MethodBeforeAdvice {
+  @Override
+  public void before(Method method, Object[] args, Object target) throws Throwable {
+
+  }
+}
